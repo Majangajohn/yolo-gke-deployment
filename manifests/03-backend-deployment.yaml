@@ -20,7 +20,7 @@ spec:
         ports:
         - containerPort: 5000
         env:
-        - name: MONGO_URI
+        - name: MONGODB_URI
           value: "mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017/yolo?replicaSet=rs0"  # Connects to replica set
         resources:
           requests:

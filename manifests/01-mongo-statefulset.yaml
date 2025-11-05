@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: mongo
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:6.0
+        command:
+          - bash
+          - -c
+          - |
+            echo "Starting MongoDB replica member..."
+            mongod --replSet rs0 --bind_ip_all &
+
+            # Wait for MongoDB to be ready
+            until mongosh --quiet --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1; do
+              echo "Waiting for MongoDB to start..."
+              sleep 3
+            done
+
+            # Initialize the replica set only from mongo-0
+            if [[ "$(hostname)" == "mongo-0" ]]; then
+              echo "Checking if replica set is initialized..."
+              RS_OK=$(mongosh --quiet --eval "try { rs.status().ok } catch(e) { 0 }")
+              if [[ "$RS_OK" != "1" ]]; then
+                echo "Initializing replica set..."
+                mongosh --quiet --eval '
+                  rs.initiate({
+                    _id: "rs0",
+                    members: [
+                      { _id: 0, host: "mongo-0.mongo:27017" },
+                      { _id: 1, host: "mongo-1.mongo:27017" }
+                    ]
+                  });
+                '
+              else
+                echo "Replica set already initialized."
+              fi
+            fi
+
+            # Keep container alive
+            tail -f /dev/null
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: data
+          mountPath: /data/db
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi

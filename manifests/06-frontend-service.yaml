@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: frontend
 spec:
-  type: LoadBalancer  # Provisions public IP
+  type: LoadBalancer  # created external public ip for access
   selector:
     app: frontend
   ports:
