@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: majangajohn/nyange-yolo-backend:v1.0.0  # Your tagged image
+        image: majangajohn/nyange-yolo-backend:v2.0.0  # Your tagged image
         ports:
         - containerPort: 5000
         env:

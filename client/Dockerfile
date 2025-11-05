@@ -21,7 +21,7 @@ COPY . .
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
 # ADD: Embed API URL at build time for React
-ENV REACT_APP_API_URL=http://localhost:5000  
+ENV REACT_APP_API_URL=http://backend:5000  
 
 # Runs the build script (creates optimized /build folder with static JS/CSS/HTML).
 RUN npm run build

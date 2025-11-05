@@ -9,11 +9,11 @@
 services:
 
   #Builds the frontend Docker image and creates the frontend microservice
-  nyange-yolo-client:
-    image: majangajohn/nyange-yolo-client:v1.0.0
+  nyange-new-yolo-client:
+    image: majangajohn/nyange-yolo-client:v2.0.0
     build: 
       context: ./client
-    container_name: nyange-yolo-client
+    container_name: nyange-new-yolo-client
     stdin_open: true
     tty: true
     ports:
@@ -21,45 +21,45 @@ services:
     environment:
       - NODE_OPTIONS=--openssl-legacy-provider # enables legacy crypto for webpack)
     depends_on: 
-      - nyange-yolo-backend
+      - nyange-new-yolo-backend
     networks:
-      - yolo-net
+      - app-net
 
   #Builds the backend Docker image and creates the backend microservice
-  nyange-yolo-backend:
-    image: majangajohn/nyange-yolo-backend:v1.0.0
+  nyange-new-yolo-backend:
+    image: majangajohn/nyange-yolo-backend:v2.0.0
     build: 
       context: ./backend
-    container_name: nyange-yolo-backend
+    container_name: nyange-new-yolo-backend
     stdin_open: true
     tty: true
     restart: always
     ports:
       - "5000:5000"
     environment:
-      - MONGODB_URI=mongodb://app-ip-mongo:27017/yolomy
+      - MONGODB_URI=mongodb://app-new-ip-mongo:27017/yolomy
     depends_on: 
-      - app-ip-mongo
+      - app-new-ip-mongo
     networks:
-      - yolo-net
+      - app-net
 
   #Creates the database microservice
-  app-ip-mongo:
-    image: mongo:5.0
-    container_name: app-mongo
+  app-new-ip-mongo:
+    image: mongo
+    container_name: app-new-mongo
     ports:
       - "27017:27017"
     networks:
-      - yolo-net
+      - app-net
     volumes:
       - type: volume
-        source: app-mongo-data
+        source: app-new-mongo-data
         target: /data/db
 
 #Creates the network infrastructure necessary for the containers to communicate with each other
 networks:
-  yolo-net:
-    name: yolo-net
+  app-net:
+    name: app-net
     driver: bridge
     attachable: true
     ipam:
@@ -69,5 +69,5 @@ networks:
 
 #Creates a Docker volume that persists all the data stored in the database
 volumes:
-  app-mongo-data:
+  app-new-mongo-data:
     driver: local
