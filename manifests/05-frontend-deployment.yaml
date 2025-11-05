@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: majangajohn/nyange-yolo-client:v2.0.0
+        image: docker.io/majangajohn/nyange-yolo-client:v2.1.0
         ports:
         - containerPort: 3000
         env:

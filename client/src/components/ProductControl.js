@@ -31,7 +31,7 @@ class ProductControl extends Component {
     
     // NEW: Separate method to fetch products for reuse (e.g., after add/edit/delete)
     fetchProducts = () => {
-        axios.get(`http://backend:5000/api/products`)
+        axios.get(`/api/products`)
             .then(res => {
                 console.log(res);
                 const products = Array.isArray(res.data) ? res.data : [];
@@ -120,7 +120,7 @@ class ProductControl extends Component {
         //     console.log(pair[0]+ ', ' + pair[1]); 
         // }       
         // console.log(...formData)
-        axios.post(`http://backend:5000/api/products`, newProduct)  
+        axios.post(`/api/products`, newProduct)  
             .then(res => {
                 console.log(res.data);
                 this.fetchProducts();  // NEW: Re-fetch products after add to update list
@@ -134,7 +134,7 @@ class ProductControl extends Component {
             });
     };
     handleDeletingProduct = (id) =>{
-        axios.delete(`http://backend:5000/api/products/${id}`)  
+        axios.delete(`/api/products/${id}`)  
             .then(res => {
                 console.log(res.data);
                 this.fetchProducts();  // NEW: Re-fetch after delete to update list
@@ -158,7 +158,7 @@ class ProductControl extends Component {
     }
     handleEditingProduct = (editedProduct) =>{
 
-        axios.put(`http://backend:5000/api/products/${this.state.selectedProduct._id}`, editedProduct)  
+        axios.put(`/api/products/${this.state.selectedProduct._id}`, editedProduct)  
             .then(res => {
                 console.log(res.data);
                 this.fetchProducts();  // NEW: Re-fetch after edit to update list

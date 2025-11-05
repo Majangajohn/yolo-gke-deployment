@@ -10,7 +10,7 @@ services:
 
   #Builds the frontend Docker image and creates the frontend microservice
   nyange-new-yolo-client:
-    image: majangajohn/nyange-yolo-client:v2.0.0
+    image: majangajohn/nyange-yolo-client:v2.1.0
     build: 
       context: ./client
     container_name: nyange-new-yolo-client
@@ -27,7 +27,7 @@ services:
 
   #Builds the backend Docker image and creates the backend microservice
   nyange-new-yolo-backend:
-    image: majangajohn/nyange-yolo-backend:v2.0.0
+    image: majangajohn/nyange-yolo-backend:v2.1.0
     build: 
       context: ./backend
     container_name: nyange-new-yolo-backend
