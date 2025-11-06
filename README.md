@@ -81,6 +81,7 @@ This ensures dependencies (e.g., mongo ready before backend).
 
 Monitors pods: `kubectl get pods -w` (wait for Running status).
 
+<img src="images/manifests-new.png" alt="Application Screenshot">
 <img src="images/manifests.png" alt="Application Screenshot">
 
 4. **Get services and External IP**:
