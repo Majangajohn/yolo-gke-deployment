@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: docker.io/majangajohn/nyange-yolo-backend:v2.1.0  # Your tagged image
+        image: docker.io/majangajohn/nyange-yolo-backend:v2.1.0  
         command: ["npm", "start"] 
         ports:
         - containerPort: 5000
