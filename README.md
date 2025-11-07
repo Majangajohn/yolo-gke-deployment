@@ -10,7 +10,7 @@ The deployment includes stateless components (frontend and backend) via Deployme
 - kubectl installed.
 - Docker installed for building images.
 - Docker Hub account for pushing images.
-- Docker images pushed: `docker.io/majangajohn/nyange-yolo-client:v2.1.0` and `docker.io/majangajohn/nyange-yolo-backend:v2.1.0`.
+- Docker images pushed: ```docker.io/majangajohn/nyange-yolo-client:v2.1.0``` and `docker.io/majangajohn/nyange-yolo-backend:v2.1.0`.
 - MongoDB image: Uses official `mongo:latest`.
 
 ## Accessing Google Cloud via CLI
