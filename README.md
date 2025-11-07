@@ -54,13 +54,15 @@ docker push yourusername/yolo-backend:version tag
 ```bash
     gcloud container clusters create yolo-cluster \
     --zone us-central1-a \
-    --num-nodes 2 \
+    --num-nodes 3 \
     --enable-autoscaling \
     --min-nodes 2 \
     --max-nodes 4 \
     --machine-type e2-small
   ```
 This provisions 2 initial nodes, autoscaling between 2-4 based on load.
+
+<img src="images/clusters.png" alt="Application Screenshot">
 
 Connect kubectl: `gcloud container clusters get-credentials yolo-cluster --zone us-central1-a`.
 

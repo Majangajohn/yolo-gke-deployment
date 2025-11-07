@@ -4,6 +4,7 @@ metadata:
   name: frontend
 spec:
   type: LoadBalancer  # created external public ip for access
+  loadBalancerIP: 34.132.220.202 #reserved IP
   selector:
     app: frontend
   ports:
