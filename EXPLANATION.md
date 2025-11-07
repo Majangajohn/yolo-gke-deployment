@@ -6,6 +6,7 @@
 - Replicas=2 across all for fault tolerance—controllers heal by recreating pods.
 -  Labels (e.g., app: mongo) for selectors and tracking.
 - Added PodDisruptionBudget (PDB) for mongo: Ensures maxUnavailable: 0 pod during voluntary disruptions (e.g., autoscaling, maintenance). Matches StatefulSet selector (app: mongo). This protects against simultaneous evictions, maintaining availability in autoscaling clusters (min 3 nodes).
+- Enhanced mongo StatefulSet with readiness probe (mongosh ping) to ensure pods are truly ready, improving PDB effectiveness during disruptions.
 
 ## 2. Method Used to Expose Pods to Internet Traffic
 - Frontend: LoadBalancer Service provisions a public IP on port 3000 (targets container 3000).Chosen because GKE provisions an external IP automatically, ideal for internet-facing apps 
@@ -49,6 +50,7 @@
     - Kind: StatefulSet, name: mongo, replicas:2, labels: app:mongo. 
     - InitContainer for replica set setup. 
     - Container: mongo:6.0, port:27017, resources (requests:200m CPU/256Mi mem, limits:500m/512Mi), volumeMount: /data/db. volumeClaimTemplates: 1Gi PVC.
+    -Added readinessProbe to mongo container: exec mongosh ping, with delays/thresholds for health checks.
 - **02-mongo-service.yaml:**
     - Kind: Service, name: mongo, headless (clusterIP:None), selector: app:mongo, port:27017.
 - **03-backend-deployment.yaml:** 

@@ -125,6 +125,7 @@ gcloud container clusters update yolo-cluster --zone us-central1-a --maintenance
 
 - Monitor: Use Google Cloud Console > Kubernetes Engine > yolo-cluster.
 - Cleanup: `gcloud container clusters delete yolo-cluster --zone us-central1-a` (to avoid costs).
+- Added readiness probe to mongo StatefulSet for accurate health checks and PDB compliance.
 
 <img src="images/gcli-cluster.png" alt="Application Screenshot">
 
