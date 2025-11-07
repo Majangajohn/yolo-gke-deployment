@@ -95,8 +95,18 @@ Access app: `http://<EXTERNAL-IP>:3000`
 <img src="images/external-ip.png" alt="Application Screenshot">
 
 5. **Accessing Live Link and Testing**:
-- Open h`ttp://<EXTERNAL-IP>:3000` in browser (replace with actual IP after deployment)..
+- Open 
+```bash
+    http://<EXTERNAL-IP>:3000
+```
+in browser (replace with actual IP after deployment)..
+
+**Live Link** http://34.132.220.202:3000/
 - Test: View products, add to cart (data persists via MongoDB).
+
+<img src="images/live-landing-page.png" alt="Application Screenshot">
+<img src="images/add-product.png" alt="Application Screenshot">
+<img src="images/product-catalog.png" alt="Application Screenshot">
 
 6. **Test Self-Healing**:
 Kubernetes controllers recreate pods to maintain replicas=2.
@@ -105,32 +115,100 @@ Kubernetes controllers recreate pods to maintain replicas=2.
 - Delete a pod: `kubectl delete pod <pod-name>` (e.g., frontend-abc-123).
 - Watch: `kubectl get pods -w` (new pod spins up automatically).
 
-[Screenshot Placeholder: Before/after kubectl get pods showing pod deletion and recreation]
+<img src="images/pod-self-healing.png" alt="Application Screenshot">
 
 7. **Cluster Maintenance** (optional, to avoid costs):
-- Set maintenance window: `gcloud container clusters update yolo-cluster --zone us-central1-a --maintenance-window-start=2025-11-07T02:00:00Z --maintenance-window-end=2025-11-07T06:00:00Z --maintenance-window-recurrence=FREQ=WEEKLY;BYDAY=SA,SU.`
-- Monitor: Use Google Cloud Console > Kubernetes Engine > yolo-cluster.
-- Cleanup: g`cloud container clusters delete yolo-cluster --zone us-central1-a` (to avoid costs).
+- Set maintenance window: 
+```bash
+gcloud container clusters update yolo-cluster --zone us-central1-a --maintenance-window-start=2025-11-07T02:00:00Z --maintenance-window-end=2025-11-07T06:00:00Z --maintenance-window-recurrence=FREQ=WEEKLY;BYDAY=SA,SU.
+```
 
-[Screenshot Placeholder: GKE cluster dashboard in Google Cloud Console showing maintenance settings]
+- Monitor: Use Google Cloud Console > Kubernetes Engine > yolo-cluster.
+- Cleanup: `gcloud container clusters delete yolo-cluster --zone us-central1-a` (to avoid costs).
+
+<img src="images/gcli-cluster.png" alt="Application Screenshot">
+
 
 7. **Pod Disruption Budget (PDB) Demonstration**:
-PDB prevents simultaneous disruption of too many pods (minAvailable:1 for mongo).
+PDB prevents simultaneous disruption of too many pods (`maxUnavailable: 0`for mongo).
 
-- Try deleting both mongo pods: `kubectl delete pod mongo-0 mongo-1`.
+- Try evicting both mongo pods: `kubectl drain node`.
 
 - Kubernetes evicts only one at a time; the second waits until the first recreates.
 
-[Screenshot Placeholder: Attempted deletion of both mongo pods showing only one evicted, with the other pending due to PDB]
+<img src="images/pdb.png" alt="Application Screenshot">
 
 
 ## Troubleshooting
 - Image pull errors: Ensure images are public on Docker Hub.
 - DB connection: Check logs if MONGO_URI fails.
 - Persistence: Delete mongo pod; cart data should remain via PVC and replica set.
+
+<img src="images/persistence1.png" alt="Application Screenshot">
+<img src="images/persistence2.png" alt="Application Screenshot">
+
 - Pods not ready: `kubectl describe pod <pod-name>`.
 - Logs: `kubectl logs <pod-name>`.
 - Resources: `kubectl top pods` for usage.
+
+## Project structure
+```bash
+├───.vagrant
+│   ├───bundler
+│   ├───machines
+│   │   └───default
+│   │       └───virtualbox
+│   └───rgloader
+├───backend
+│   ├───models
+│   └───routes
+│       └───api
+├───client
+│   ├───public
+│   └───src
+│       ├───components
+│       └───images
+│           ├───backgrounds
+│           ├───logo
+│           ├───products
+│           └───social_icons
+├───images
+├───manifests
+├───roles
+│   ├───backend_container
+│   │   ├───tasks
+│   │   └───vars
+│   ├───clone_repo
+│   │   ├───tasks
+│   │   └───vars
+│   ├───db_container
+│   │   ├───tasks
+│   │   └───vars
+│   ├───frontend_container
+│   │   ├───tasks
+│   │   └───vars
+│   └───install_docker
+│       ├───tasks
+│       └───vars
+└───Stage_two
+    └───terraform
+        └───roles
+            ├───backend_container
+            │   ├───tasks
+            │   └───vars
+            ├───clone_repo
+            │   ├───tasks
+            │   └───vars
+            ├───db_container
+            │   ├───tasks
+            │   └───vars
+            ├───frontend_container
+            │   ├───tasks
+            │   └───vars
+            └───install_docker
+                ├───tasks
+                └───vars
+```
 
 ## How Google Kubernetes Engine (GKE) Works
 GKE is Google's managed Kubernetes service. It handles the control plane (free), while you manage worker nodes (paid). Pods (containers) run on nodes; Deployments/StatefulSets manage replicas for scaling/healing. Services route traffic (internal/external). Autoscaling adjusts nodes (min 2, max 4 here) based on CPU/memory. Persistent Volumes ensure data survival. GKE integrates with Google Cloud for load balancing, monitoring, and security.

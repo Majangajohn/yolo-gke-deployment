@@ -3,7 +3,7 @@ kind: PodDisruptionBudget
 metadata:
   name: mongo-pdb
 spec:
-  minAvailable: 1
+  maxUnavailable: 0
   selector:
     matchLabels:
       app: mongo
